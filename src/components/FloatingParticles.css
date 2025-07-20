@@ -1,0 +1,52 @@
+.floating-particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.particle {
+  position: absolute;
+  font-size: 1.5rem;
+  filter: blur(0.5px);
+  user-select: none;
+}
+
+/* Different particle sizes and effects */
+.particle:nth-child(odd) {
+  font-size: 1.2rem;
+  filter: blur(0.3px);
+}
+
+.particle:nth-child(even) {
+  font-size: 1.8rem;
+  filter: blur(0.7px);
+}
+
+.particle:nth-child(3n) {
+  font-size: 1rem;
+  filter: blur(0.2px);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .particle {
+    font-size: 1rem;
+  }
+  
+  .particle:nth-child(odd) {
+    font-size: 0.8rem;
+  }
+  
+  .particle:nth-child(even) {
+    font-size: 1.2rem;
+  }
+  
+  .particle:nth-child(3n) {
+    font-size: 0.7rem;
+  }
+} 

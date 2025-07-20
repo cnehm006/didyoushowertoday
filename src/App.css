@@ -1,3 +1,11 @@
+/* Import component styles */
+@import './components/LoadingSkeleton.css';
+@import './components/AchievementBadge.css';
+@import './components/KeyboardShortcuts.css';
+@import './components/FloatingParticles.css';
+@import './components/AuthPage.css';
+@import './components/ProfilePage.css';
+
 /* CSS Variables for theming */
 :root {
   /* Light theme */
@@ -190,6 +198,32 @@ body {
   .container {
     padding: 0 1rem;
   }
+}
+
+/* Loading Screen */
+.loading-screen {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+  gap: 2rem;
+}
+
+.loading-spinner {
+  width: 60px;
+  height: 60px;
+  border: 4px solid var(--border-color);
+  border-top: 4px solid var(--accent-color);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loading-screen p {
+  color: var(--text-secondary);
+  font-size: 1.125rem;
+  font-weight: 500;
 }
 
 /* Focus styles for accessibility */

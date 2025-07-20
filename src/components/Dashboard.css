@@ -325,6 +325,18 @@
   }
 }
 
+/* Achievements Section */
+.achievements-section {
+  margin-top: 4rem;
+}
+
+.achievements-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
 @media (max-width: 480px) {
   .charts-grid {
     gap: 1rem;
@@ -342,5 +354,10 @@
     flex-direction: column;
     text-align: center;
     gap: 0.5rem;
+  }
+  
+  .achievements-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
   }
 } 

@@ -83,6 +83,34 @@
   gap: 1rem;
 }
 
+.nav-buttons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.nav-btn {
+  padding: 0.5rem 1rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.nav-btn:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.nav-btn.active {
+  background: var(--accent-color);
+  color: white;
+  border-color: var(--accent-color);
+}
+
 .control-btn {
   display: flex;
   align-items: center;
@@ -138,6 +166,17 @@
 /* Theme Button Specific */
 .theme-btn {
   background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary));
+}
+
+/* Shortcuts Button Specific */
+.shortcuts-btn {
+  background: linear-gradient(135deg, var(--accent-color), var(--accent-hover));
+  color: white;
+}
+
+.shortcuts-btn:hover {
+  background: linear-gradient(135deg, var(--accent-hover), var(--accent-color));
+  transform: translateY(-2px);
 }
 
 /* Floating Background Elements */

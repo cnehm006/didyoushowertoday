@@ -1,13 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Sun, Moon, Languages, Droplets } from 'lucide-react';
+import { Sun, Moon, Languages, Droplets, Keyboard } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
+import KeyboardShortcuts from './KeyboardShortcuts';
 import './Header.css';
 
-const Header: React.FC = () => {
+interface HeaderProps {
+  onPageChange?: (page: 'dashboard' | 'profile') => void;
+  currentPage?: 'dashboard' | 'profile';
+}
+
+const Header: React.FC<HeaderProps> = ({ onPageChange, currentPage = 'dashboard' }) => {
   const { theme, toggleTheme } = useTheme();
   const { language, toggleLanguage, t } = useLanguage();
+  const [showShortcuts, setShowShortcuts] = useState(false);
 
   return (
     <motion.header 
@@ -49,6 +56,26 @@ const Header: React.FC = () => {
 
           {/* Controls */}
           <div className="header-controls">
+            {/* Navigation */}
+            <div className="nav-buttons">
+              <motion.button
+                className={`nav-btn ${currentPage === 'dashboard' ? 'active' : ''}`}
+                onClick={() => onPageChange?.('dashboard')}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                📊 Dashboard
+              </motion.button>
+              <motion.button
+                className={`nav-btn ${currentPage === 'profile' ? 'active' : ''}`}
+                onClick={() => onPageChange?.('profile')}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                👤 Profile
+              </motion.button>
+            </div>
+
             {/* Language Toggle */}
             <motion.button
               className="control-btn language-btn"
@@ -92,9 +119,27 @@ const Header: React.FC = () => {
                 {theme === 'dark' ? t('lightMode') : t('darkMode')}
               </span>
             </motion.button>
+
+            {/* Keyboard Shortcuts */}
+            <motion.button
+              className="control-btn shortcuts-btn"
+              onClick={() => setShowShortcuts(true)}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.95 }}
+              title="Keyboard Shortcuts"
+            >
+              <Keyboard className="control-icon" />
+              <span className="control-text">⌨️</span>
+            </motion.button>
           </div>
         </div>
       </div>
+
+      {/* Keyboard Shortcuts Modal */}
+      <KeyboardShortcuts 
+        isVisible={showShortcuts}
+        onClose={() => setShowShortcuts(false)}
+      />
 
       {/* Animated background elements */}
       <div className="header-background">
