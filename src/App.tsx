@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
 import Navigation from './components/Navigation';
 import Dashboard from './components/Dashboard';
@@ -28,7 +28,7 @@ const AppContent: React.FC = () => {
   }
 
   return (
-    <BrowserRouter>
+    <HashRouter>
       <div className="App">
         <ThemeTransition />
         <FloatingParticles />
@@ -102,7 +102,7 @@ const AppContent: React.FC = () => {
           } />
         </Routes>
       </div>
-    </BrowserRouter>
+    </HashRouter>
   );
 };
 
