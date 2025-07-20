@@ -30,6 +30,12 @@ A quirky, interactive dashboard that visualizes the correlation between shower f
 - **Synthetic Data** - Clearly marked fictional data for educational purposes
 - **Mood Indicators** - Color-coded bars based on vibe levels
 
+### 🔐 **Authentication System**
+- **Real Firebase Auth** - Secure email/password authentication
+- **User Profiles** - Personal dashboard with achievements and stats
+- **Data Persistence** - Shower data and achievements saved to Firestore
+- **Demo Mode** - Works without Firebase setup for testing
+
 ## 🛠️ Technical Stack
 
 - **React 18** - Modern React with hooks and functional components
@@ -37,8 +43,8 @@ A quirky, interactive dashboard that visualizes the correlation between shower f
 - **Framer Motion** - Smooth animations and micro-interactions
 - **Recharts** - Beautiful, responsive chart library
 - **Lucide React** - Modern icon library
+- **Firebase** - Authentication and Firestore database
 - **CSS Variables** - Dynamic theming system
-- **Local Storage** - Persistent user preferences
 
 ## 🚀 Getting Started
 
@@ -53,12 +59,23 @@ A quirky, interactive dashboard that visualizes the correlation between shower f
    npm install
    ```
 
-3. **Start the development server**
+3. **Set up Firebase (Required for Authentication)**
+   
+   **Option A: Quick Setup (Demo Mode)**
+   - The app will work with demo authentication (any email/password)
+   - Perfect for testing and development
+   
+   **Option B: Real Firebase Setup**
+   - Follow the [Firebase Setup Guide](./FIREBASE_SETUP.md)
+   - Create a Firebase project and enable Authentication + Firestore
+   - Update `src/firebase/config.ts` with your Firebase credentials
+
+4. **Start the development server**
    ```bash
    npm start
    ```
 
-4. **Open your browser**
+5. **Open your browser**
    Navigate to `http://localhost:3000`
 
 ## 📱 Responsive Design

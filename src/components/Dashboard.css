@@ -1,5 +1,6 @@
 .dashboard {
   min-height: calc(100vh - 120px);
+  padding-top: 80px;
 }
 
 /* Hero Section */
@@ -36,11 +37,12 @@
   font-weight: 800;
   color: var(--text-primary);
   margin: 0 0 1.5rem 0;
-  background: linear-gradient(135deg, var(--accent-color), var(--success-color));
+  background: linear-gradient(135deg, #3b82f6, #10b981);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
   line-height: 1.2;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .hero-subtitle {

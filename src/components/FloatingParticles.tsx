@@ -1,9 +1,13 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useTheme } from '../contexts/ThemeContext';
 import './FloatingParticles.css';
 
 const FloatingParticles: React.FC = () => {
-  const particles = [
+  const { theme } = useTheme();
+
+  // Different particles for light vs dark mode
+  const lightParticles = [
     { emoji: '💧', delay: 0, duration: 8 },
     { emoji: '🫧', delay: 1, duration: 10 },
     { emoji: '🌊', delay: 2, duration: 12 },
@@ -13,6 +17,19 @@ const FloatingParticles: React.FC = () => {
     { emoji: '🌊', delay: 6, duration: 13 },
     { emoji: '💦', delay: 7, duration: 8 },
   ];
+
+  const darkParticles = [
+    { emoji: '☀️', delay: 0, duration: 8 },
+    { emoji: '✨', delay: 1, duration: 10 },
+    { emoji: '🌟', delay: 2, duration: 12 },
+    { emoji: '💫', delay: 3, duration: 9 },
+    { emoji: '⭐', delay: 4, duration: 11 },
+    { emoji: '☀️', delay: 5, duration: 7 },
+    { emoji: '✨', delay: 6, duration: 13 },
+    { emoji: '🌟', delay: 7, duration: 8 },
+  ];
+
+  const particles = theme === 'dark' ? darkParticles : lightParticles;
 
   return (
     <div className="floating-particles">

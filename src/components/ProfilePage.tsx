@@ -20,9 +20,9 @@ const ProfilePage: React.FC = () => {
     : '0.0';
 
   const tabs = [
-    { id: 'profile', label: 'Profile', icon: User },
-    { id: 'achievements', label: 'Achievements', icon: Trophy },
-    { id: 'settings', label: 'Settings', icon: Settings }
+    { id: 'profile', label: t('profile'), icon: User },
+    { id: 'achievements', label: t('achievements'), icon: Trophy },
+    { id: 'settings', label: t('settings'), icon: Settings }
   ];
 
   return (
@@ -56,7 +56,7 @@ const ProfilePage: React.FC = () => {
             <h1 className="profile-name">{user.username}</h1>
             <p className="profile-email">{user.email}</p>
             <p className="profile-join-date">
-              Member since {new Date(user.joinDate).toLocaleDateString()}
+              {t('memberSince')} {user.joinDate ? new Date(user.joinDate).toLocaleDateString() : 'Recently'}
             </p>
           </div>
 
@@ -67,7 +67,7 @@ const ProfilePage: React.FC = () => {
             whileTap={{ scale: 0.95 }}
           >
             <LogOut size={20} />
-            Logout
+            {t('logout')}
           </motion.button>
         </motion.div>
 
@@ -87,7 +87,7 @@ const ProfilePage: React.FC = () => {
               <div className="stat-icon">🚿</div>
               <div className="stat-content">
                 <h3 className="stat-value">{totalShowers}</h3>
-                <p className="stat-label">Total Showers</p>
+                <p className="stat-label">{t('totalShowers')}</p>
               </div>
             </motion.div>
 
@@ -99,7 +99,7 @@ const ProfilePage: React.FC = () => {
               <div className="stat-icon">🔥</div>
               <div className="stat-content">
                 <h3 className="stat-value">{currentStreak}</h3>
-                <p className="stat-label">Current Streak</p>
+                <p className="stat-label">{t('currentStreak')}</p>
               </div>
             </motion.div>
 
@@ -111,7 +111,7 @@ const ProfilePage: React.FC = () => {
               <div className="stat-icon">🧠</div>
               <div className="stat-content">
                 <h3 className="stat-value">{averageVibe}</h3>
-                <p className="stat-label">Avg Vibe</p>
+                <p className="stat-label">{t('avgVibe')}</p>
               </div>
             </motion.div>
 
@@ -123,7 +123,7 @@ const ProfilePage: React.FC = () => {
               <div className="stat-icon">🏆</div>
               <div className="stat-content">
                 <h3 className="stat-value">{user.achievements.length}</h3>
-                <p className="stat-label">Achievements</p>
+                <p className="stat-label">{t('achievements')}</p>
               </div>
             </motion.div>
           </div>
@@ -165,19 +165,19 @@ const ProfilePage: React.FC = () => {
                   transition={{ duration: 0.3 }}
                   className="profile-tab"
                 >
-                  <h2>Profile Information</h2>
+                  <h2>{t('profileInformation')}</h2>
                   <div className="profile-details">
                     <div className="detail-item">
-                      <label>Username</label>
+                      <label>{t('username')}</label>
                       <input type="text" value={user.username} readOnly />
                     </div>
                     <div className="detail-item">
-                      <label>Email</label>
+                      <label>{t('email')}</label>
                       <input type="email" value={user.email} readOnly />
                     </div>
                     <div className="detail-item">
-                      <label>Join Date</label>
-                      <input type="text" value={new Date(user.joinDate).toLocaleDateString()} readOnly />
+                      <label>{t('joinDate')}</label>
+                      <input type="text" value={user.joinDate ? new Date(user.joinDate).toLocaleDateString() : 'Recently'} readOnly />
                     </div>
                   </div>
                 </motion.div>
@@ -192,12 +192,12 @@ const ProfilePage: React.FC = () => {
                   transition={{ duration: 0.3 }}
                   className="achievements-tab"
                 >
-                  <h2>Your Achievements</h2>
+                  <h2>{t('yourAchievements')}</h2>
                   {user.achievements.length === 0 ? (
                     <div className="empty-state">
                       <Trophy size={48} />
-                      <p>No achievements unlocked yet!</p>
-                      <p>Start tracking your showers to unlock achievements.</p>
+                      <p>{t('noAchievementsYet')}</p>
+                      <p>{t('startTrackingToUnlock')}</p>
                     </div>
                   ) : (
                     <div className="achievements-grid">

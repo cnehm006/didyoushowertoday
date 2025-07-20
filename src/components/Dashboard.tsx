@@ -5,52 +5,13 @@ import { showerData, productUsageData } from '../data/showerData';
 import LineChart from './charts/LineChart';
 import BarChart from './charts/BarChart';
 import PieChart from './charts/PieChart';
-import LoadingSkeleton from './LoadingSkeleton';
-import AchievementBadge from './AchievementBadge';
-import KeyboardShortcuts from './KeyboardShortcuts';
+
 import './Dashboard.css';
 
 const Dashboard: React.FC = () => {
   const { t } = useLanguage();
   const [selectedGroup, setSelectedGroup] = useState<string>('students');
-  const [isLoading, setIsLoading] = useState(true);
-  const [showShortcuts, setShowShortcuts] = useState(false);
 
-  // Simulate loading
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  // Achievement data based on current group
-  const achievements = [
-    {
-      type: 'streak' as const,
-      title: 'Shower Streak',
-      description: 'Maintain a 7-day shower streak',
-      progress: Math.min(showerData[selectedGroup].filter(day => day.showers > 0).length, 7),
-      maxProgress: 7,
-      unlocked: showerData[selectedGroup].filter(day => day.showers > 0).length >= 7
-    },
-    {
-      type: 'vibe' as const,
-      title: 'High Vibe Master',
-      description: 'Achieve 8+ vibe level for 3 days',
-      progress: Math.min(showerData[selectedGroup].filter(day => day.vibe >= 8).length, 3),
-      maxProgress: 3,
-      unlocked: showerData[selectedGroup].filter(day => day.vibe >= 8).length >= 3
-    },
-    {
-      type: 'consistency' as const,
-      title: 'Consistency King',
-      description: 'Shower every day for a week',
-      progress: Math.min(showerData[selectedGroup].filter(day => day.showers >= 0.8).length, 7),
-      maxProgress: 7,
-      unlocked: showerData[selectedGroup].filter(day => day.showers >= 0.8).length >= 7
-    }
-  ];
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -246,34 +207,10 @@ const Dashboard: React.FC = () => {
           </div>
         </motion.div>
 
-        {/* Achievements Section */}
-        <motion.div 
-          className="achievements-section"
-          variants={itemVariants}
-        >
-          <h2 className="section-title">🏆 Achievements</h2>
-          <div className="achievements-grid">
-            {achievements.map((achievement, index) => (
-              <AchievementBadge
-                key={achievement.title}
-                type={achievement.type}
-                title={achievement.title}
-                description={achievement.description}
-                progress={achievement.progress}
-                maxProgress={achievement.maxProgress}
-                unlocked={achievement.unlocked}
-              />
-            ))}
-          </div>
-        </motion.div>
+
       </div>
     </section>
 
-    {/* Keyboard Shortcuts Modal */}
-    <KeyboardShortcuts 
-      isVisible={showShortcuts}
-      onClose={() => setShowShortcuts(false)}
-    />
   </motion.main>
   );
 };

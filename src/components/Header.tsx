@@ -1,20 +1,17 @@
 import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Sun, Moon, Languages, Droplets, Keyboard } from 'lucide-react';
+import { Sun, Moon, Languages, Droplets } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 import { useLanguage } from '../contexts/LanguageContext';
-import KeyboardShortcuts from './KeyboardShortcuts';
+
 import './Header.css';
 
-interface HeaderProps {
-  onPageChange?: (page: 'dashboard' | 'profile') => void;
-  currentPage?: 'dashboard' | 'profile';
-}
-
-const Header: React.FC<HeaderProps> = ({ onPageChange, currentPage = 'dashboard' }) => {
+const Header: React.FC = () => {
+  const location = useLocation();
+  const currentPage = location.pathname === '/dashboard' ? 'dashboard' : 'profile';
   const { theme, toggleTheme } = useTheme();
   const { language, toggleLanguage, t } = useLanguage();
-  const [showShortcuts, setShowShortcuts] = useState(false);
 
   return (
     <motion.header 
@@ -58,22 +55,24 @@ const Header: React.FC<HeaderProps> = ({ onPageChange, currentPage = 'dashboard'
           <div className="header-controls">
             {/* Navigation */}
             <div className="nav-buttons">
-              <motion.button
-                className={`nav-btn ${currentPage === 'dashboard' ? 'active' : ''}`}
-                onClick={() => onPageChange?.('dashboard')}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                📊 Dashboard
-              </motion.button>
-              <motion.button
-                className={`nav-btn ${currentPage === 'profile' ? 'active' : ''}`}
-                onClick={() => onPageChange?.('profile')}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                👤 Profile
-              </motion.button>
+              <Link to="/dashboard">
+                <motion.button
+                  className={`nav-btn ${currentPage === 'dashboard' ? 'active' : ''}`}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  📊 Dashboard
+                </motion.button>
+              </Link>
+              <Link to="/profile">
+                <motion.button
+                  className={`nav-btn ${currentPage === 'profile' ? 'active' : ''}`}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  👤 Profile
+                </motion.button>
+              </Link>
             </div>
 
             {/* Language Toggle */}
@@ -120,26 +119,12 @@ const Header: React.FC<HeaderProps> = ({ onPageChange, currentPage = 'dashboard'
               </span>
             </motion.button>
 
-            {/* Keyboard Shortcuts */}
-            <motion.button
-              className="control-btn shortcuts-btn"
-              onClick={() => setShowShortcuts(true)}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-              title="Keyboard Shortcuts"
-            >
-              <Keyboard className="control-icon" />
-              <span className="control-text">⌨️</span>
-            </motion.button>
+
           </div>
         </div>
       </div>
 
-      {/* Keyboard Shortcuts Modal */}
-      <KeyboardShortcuts 
-        isVisible={showShortcuts}
-        onClose={() => setShowShortcuts(false)}
-      />
+
 
       {/* Animated background elements */}
       <div className="header-background">

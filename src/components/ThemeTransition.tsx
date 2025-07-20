@@ -21,15 +21,15 @@ const ThemeTransition: React.FC = () => {
           className="theme-transition-overlay"
           initial={{ 
             clipPath: 'circle(0% at 0% 0%)',
-            backgroundColor: theme === 'dark' ? '#ffffff' : '#0f172a'
+            backgroundColor: theme === 'light' ? '#ffffff' : '#0f172a'
           }}
           animate={{ 
             clipPath: 'circle(150% at 0% 0%)',
-            backgroundColor: theme === 'dark' ? '#ffffff' : '#0f172a'
+            backgroundColor: theme === 'light' ? '#ffffff' : '#0f172a'
           }}
           exit={{ 
             clipPath: 'circle(0% at 100% 100%)',
-            backgroundColor: theme === 'dark' ? '#ffffff' : '#0f172a'
+            backgroundColor: theme === 'light' ? '#ffffff' : '#0f172a'
           }}
           transition={{ 
             duration: 0.8,

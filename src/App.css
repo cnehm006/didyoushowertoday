@@ -1,7 +1,7 @@
 /* Import component styles */
 @import './components/LoadingSkeleton.css';
 @import './components/AchievementBadge.css';
-@import './components/KeyboardShortcuts.css';
+
 @import './components/FloatingParticles.css';
 @import './components/AuthPage.css';
 @import './components/ProfilePage.css';

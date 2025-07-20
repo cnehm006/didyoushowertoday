@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import './App.css';
-import Header from './components/Header';
+import Navigation from './components/Navigation';
 import Dashboard from './components/Dashboard';
 import AuthPage from './components/AuthPage';
 import ProfilePage from './components/ProfilePage';
+import AboutPage from './components/AboutPage';
 import ThemeTransition from './components/ThemeTransition';
 import FloatingParticles from './components/FloatingParticles';
 import { ThemeProvider } from './contexts/ThemeContext';
@@ -12,7 +14,6 @@ import { UserProvider, useUser } from './contexts/UserContext';
 
 const AppContent: React.FC = () => {
   const { isAuthenticated, isLoading } = useUser();
-  const [currentPage, setCurrentPage] = useState<'dashboard' | 'profile'>('dashboard');
 
   if (isLoading) {
     return (
@@ -25,23 +26,74 @@ const AppContent: React.FC = () => {
     );
   }
 
-  if (!isAuthenticated) {
-    return (
+  return (
+    <BrowserRouter>
       <div className="App">
         <ThemeTransition />
         <FloatingParticles />
-        <AuthPage />
+        <Routes>
+          {/* Public routes */}
+          <Route path="/login" element={
+            !isAuthenticated ? (
+              <>
+                <Navigation showNavLinks={false} />
+                <AuthPage />
+              </>
+            ) : (
+              <Navigate to="/dashboard" replace />
+            )
+          } />
+          
+          <Route path="/about" element={
+            <>
+              <Navigation showNavLinks={isAuthenticated} />
+              <AboutPage />
+            </>
+          } />
+          
+          {/* Protected routes */}
+          <Route path="/dashboard" element={
+            isAuthenticated ? (
+              <>
+                <Navigation />
+                <Dashboard />
+              </>
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          } />
+          
+          <Route path="/profile" element={
+            isAuthenticated ? (
+              <>
+                <Navigation />
+                <ProfilePage />
+              </>
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          } />
+          
+          {/* Default redirects */}
+          <Route path="/" element={
+            isAuthenticated ? (
+              <Navigate to="/dashboard" replace />
+            ) : (
+              <Navigate to="/about" replace />
+            )
+          } />
+          
+          {/* Catch all - redirect to dashboard if authenticated, about if not */}
+          <Route path="*" element={
+            isAuthenticated ? (
+              <Navigate to="/dashboard" replace />
+            ) : (
+              <Navigate to="/about" replace />
+            )
+          } />
+        </Routes>
       </div>
-    );
-  }
-
-  return (
-    <div className="App">
-      <ThemeTransition />
-      <FloatingParticles />
-      <Header onPageChange={setCurrentPage} currentPage={currentPage} />
-      {currentPage === 'dashboard' ? <Dashboard /> : <ProfilePage />}
-    </div>
+    </BrowserRouter>
   );
 };
 

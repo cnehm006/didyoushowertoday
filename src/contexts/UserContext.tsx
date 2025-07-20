@@ -1,40 +1,18 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-
-interface User {
-  id: string;
-  email: string;
-  username: string;
-  avatar?: string;
-  joinDate: Date;
-  achievements: Achievement[];
-  showerData: ShowerEntry[];
-  preferences: UserPreferences;
-}
-
-interface Achievement {
-  id: string;
-  type: 'streak' | 'vibe' | 'consistency' | 'goal';
-  title: string;
-  description: string;
-  unlockedAt: Date;
-  progress: number;
-  maxProgress: number;
-}
-
-interface ShowerEntry {
-  date: string;
-  showered: boolean;
-  vibe: number;
-  notes?: string;
-  products: string[];
-}
-
-interface UserPreferences {
-  theme: 'light' | 'dark';
-  language: 'en' | 'fr';
-  notifications: boolean;
-  reminderTime?: string;
-}
+import { 
+  signUpWithEmail, 
+  signInWithEmail, 
+  signOutUser, 
+  onAuthStateChange,
+  getCurrentUser,
+  addShowerEntry,
+  unlockAchievement,
+  updateUserData,
+  User,
+  Achievement,
+  ShowerEntry,
+  UserPreferences
+} from '../firebase/auth';
 
 interface UserContextType {
   user: User | null;
@@ -44,7 +22,7 @@ interface UserContextType {
   signup: (email: string, username: string, password: string) => Promise<boolean>;
   logout: () => void;
   updateShowerData: (entry: ShowerEntry) => void;
-  unlockAchievement: (achievementId: string) => void;
+  unlockAchievement: (achievementId: string) => Promise<void>;
   updatePreferences: (preferences: Partial<UserPreferences>) => void;
 }
 
@@ -62,133 +40,110 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Load user from localStorage on mount
+  // Listen for auth state changes
   useEffect(() => {
-    const savedUser = localStorage.getItem('shower_user');
-    if (savedUser) {
-      try {
-        const parsedUser = JSON.parse(savedUser);
-        setUser(parsedUser);
-      } catch (error) {
-        console.error('Failed to parse saved user:', error);
-        localStorage.removeItem('shower_user');
-      }
-    }
-    setIsLoading(false);
-  }, []);
+    const unsubscribe = onAuthStateChange((userData) => {
+      setUser(userData);
+      setIsLoading(false);
+    });
 
-  // Save user to localStorage whenever it changes
-  useEffect(() => {
-    if (user) {
-      localStorage.setItem('shower_user', JSON.stringify(user));
-    } else {
-      localStorage.removeItem('shower_user');
-    }
-  }, [user]);
+    return () => unsubscribe();
+  }, []);
 
   const login = async (email: string, password: string): Promise<boolean> => {
     setIsLoading(true);
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // For demo purposes, accept any email/password
-    if (email && password) {
-      const newUser: User = {
-        id: 'user_' + Date.now(),
-        email,
-        username: email.split('@')[0],
-        joinDate: new Date(),
-        achievements: [],
-        showerData: [],
-        preferences: {
-          theme: 'light',
-          language: 'en',
-          notifications: true
-        }
-      };
-      
-      setUser(newUser);
-      setIsLoading(false);
+    try {
+      await signInWithEmail(email, password);
       return true;
+    } catch (error: any) {
+      console.error('Login error:', error);
+      return false;
+    } finally {
+      setIsLoading(false);
     }
-    
-    setIsLoading(false);
-    return false;
   };
 
   const signup = async (email: string, username: string, password: string): Promise<boolean> => {
     setIsLoading(true);
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    // For demo purposes, accept any valid signup
-    if (email && username && password) {
-      const newUser: User = {
-        id: 'user_' + Date.now(),
-        email,
-        username,
-        joinDate: new Date(),
-        achievements: [],
-        showerData: [],
-        preferences: {
-          theme: 'light',
-          language: 'en',
-          notifications: true
-        }
-      };
-      
-      setUser(newUser);
-      setIsLoading(false);
+    try {
+      await signUpWithEmail(email, password, username);
       return true;
+    } catch (error: any) {
+      console.error('Signup error:', error);
+      return false;
+    } finally {
+      setIsLoading(false);
     }
-    
-    setIsLoading(false);
-    return false;
   };
 
-  const logout = () => {
-    setUser(null);
+  const logout = async () => {
+    try {
+      await signOutUser();
+      setUser(null);
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
   };
 
-  const updateShowerData = (entry: ShowerEntry) => {
+  const updateShowerData = async (entry: ShowerEntry) => {
     if (!user) return;
     
-    const updatedUser = {
-      ...user,
-      showerData: [...user.showerData, entry]
-    };
-    
-    setUser(updatedUser);
+    try {
+      await addShowerEntry(user.id, entry);
+      
+      // Update local state
+      const updatedUser = {
+        ...user,
+        showerData: [...user.showerData, entry]
+      };
+      setUser(updatedUser);
+    } catch (error) {
+      console.error('Error updating shower data:', error);
+    }
   };
 
-  const unlockAchievement = (achievementId: string) => {
+  const unlockUserAchievement = async (achievementId: string) => {
     if (!user) return;
     
     const achievement = getAchievementById(achievementId);
     if (achievement && !user.achievements.find(a => a.id === achievementId)) {
-      const updatedUser = {
-        ...user,
-        achievements: [...user.achievements, {
+      try {
+        const achievementWithDate = {
           ...achievement,
           unlockedAt: new Date()
-        }]
-      };
-      
-      setUser(updatedUser);
+        };
+        
+        await unlockAchievement(user.id, achievementWithDate);
+        
+        // Update local state
+        const updatedUser = {
+          ...user,
+          achievements: [...user.achievements, achievementWithDate]
+        };
+        setUser(updatedUser);
+      } catch (error) {
+        console.error('Error unlocking achievement:', error);
+      }
     }
   };
 
-  const updatePreferences = (preferences: Partial<UserPreferences>) => {
+  const updatePreferences = async (preferences: Partial<UserPreferences>) => {
     if (!user) return;
     
-    const updatedUser = {
-      ...user,
-      preferences: { ...user.preferences, ...preferences }
-    };
-    
-    setUser(updatedUser);
+    try {
+      await updateUserData(user.id, { preferences: { ...user.preferences, ...preferences } });
+      
+      // Update local state
+      const updatedUser = {
+        ...user,
+        preferences: { ...user.preferences, ...preferences }
+      };
+      setUser(updatedUser);
+    } catch (error) {
+      console.error('Error updating preferences:', error);
+    }
   };
 
   const getAchievementById = (id: string) => {
@@ -230,7 +185,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     signup,
     logout,
     updateShowerData,
-    unlockAchievement,
+    unlockAchievement: unlockUserAchievement,
     updatePreferences
   };
 

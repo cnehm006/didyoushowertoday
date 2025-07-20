@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useUser } from '../contexts/UserContext';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -6,13 +7,21 @@ import { LogIn, UserPlus, Mail, Lock, User, Loader } from 'lucide-react';
 import './AuthPage.css';
 
 const AuthPage: React.FC = () => {
-  const { login, signup, isLoading } = useUser();
+  const { login, signup, isLoading, isAuthenticated } = useUser();
   const { t } = useLanguage();
+  const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+
+  // Redirect to dashboard if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/dashboard');
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,10 +37,10 @@ const AuthPage: React.FC = () => {
       }
 
       if (!success) {
-        setError(isLogin ? 'Invalid credentials' : 'Signup failed');
+        setError(isLogin ? 'Invalid email or password' : 'Signup failed. Please try again.');
       }
-    } catch (err) {
-      setError('An error occurred');
+    } catch (err: any) {
+      setError(err.message || 'An error occurred');
     }
   };
 
@@ -110,12 +119,12 @@ const AuthPage: React.FC = () => {
               {isLogin ? <LogIn size={32} /> : <UserPlus size={32} />}
             </motion.div>
             <h1 className="auth-title">
-              {isLogin ? 'Welcome Back!' : 'Join the Shower Club!'}
+              {isLogin ? t('welcomeBack') : t('joinShowerClub')}
             </h1>
             <p className="auth-subtitle">
               {isLogin 
-                ? 'Track your shower habits and unlock achievements' 
-                : 'Start your journey to better hygiene and mental wellness'
+                ? t('welcomeBackDesc') 
+                : t('joinShowerClubDesc')
               }
             </p>
           </div>
@@ -135,7 +144,7 @@ const AuthPage: React.FC = () => {
                     <User className="input-icon" />
                     <input
                       type="text"
-                      placeholder="Username"
+                      placeholder={t('username')}
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
                       required={!isLogin}
@@ -151,7 +160,7 @@ const AuthPage: React.FC = () => {
                 <Mail className="input-icon" />
                 <input
                   type="email"
-                  placeholder="Email"
+                  placeholder={t('email')}
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
@@ -165,7 +174,7 @@ const AuthPage: React.FC = () => {
                 <Lock className="input-icon" />
                 <input
                   type="password"
-                  placeholder="Password"
+                  placeholder={t('password')}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -195,20 +204,20 @@ const AuthPage: React.FC = () => {
               {isLoading ? (
                 <Loader className="spinner" />
               ) : (
-                isLogin ? 'Sign In' : 'Create Account'
+                isLogin ? t('signIn') : t('createAccount')
               )}
             </motion.button>
           </form>
 
           <div className="auth-footer">
             <p className="auth-switch">
-              {isLogin ? "Don't have an account?" : "Already have an account?"}
+              {isLogin ? t('noAccount') : t('haveAccount')}
               <button
                 type="button"
                 onClick={toggleMode}
                 className="switch-button"
               >
-                {isLogin ? 'Sign Up' : 'Sign In'}
+                {isLogin ? t('signUp') : t('signIn')}
               </button>
             </p>
           </div>
@@ -216,15 +225,15 @@ const AuthPage: React.FC = () => {
           <div className="auth-features">
             <div className="feature">
               <span className="feature-icon">🏆</span>
-              <span>Unlock Achievements</span>
+              <span>{t('unlockAchievements')}</span>
             </div>
             <div className="feature">
               <span className="feature-icon">📊</span>
-              <span>Track Progress</span>
+              <span>{t('trackProgress')}</span>
             </div>
             <div className="feature">
               <span className="feature-icon">🧠</span>
-              <span>Mental Wellness</span>
+              <span>{t('mentalWellness')}</span>
             </div>
           </div>
         </motion.div>
