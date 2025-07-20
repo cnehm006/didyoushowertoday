@@ -290,15 +290,56 @@
   background: var(--bg-secondary);
   border-radius: 12px;
   border: 1px solid var(--border-color);
-  display: grid;
-  grid-template-columns: 1fr auto auto;
-  gap: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.entry-header {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
+  margin-bottom: 8px;
+  gap: 8px;
 }
 
 .entry-date {
   font-weight: 600;
   color: var(--text-primary);
+}
+
+.entry-time {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  opacity: 0.7;
+}
+
+.delete-entry-btn {
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  opacity: 0.6;
+}
+
+.delete-entry-btn:hover {
+  color: #ef4444;
+  background-color: rgba(239, 68, 68, 0.1);
+  opacity: 1;
+}
+
+.delete-entry-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.loading-spinner.small {
+  width: 12px;
+  height: 12px;
+  border-width: 1px;
 }
 
 .entry-status {
@@ -312,19 +353,53 @@
 .entry-vibe {
   display: flex;
   align-items: center;
-  gap: 4px;
-  font-weight: 500;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+
+.entry-products {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 0.85rem;
   color: var(--text-secondary);
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.products-label {
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.products-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.product-tag {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  padding: 2px 6px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border: 1px solid var(--border-color);
 }
 
 .entry-notes {
-  grid-column: 1 / -1;
   font-style: italic;
   color: var(--text-secondary);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   margin-top: 8px;
-  padding-top: 8px;
-  border-top: 1px solid var(--border-color);
+  padding: 8px;
+  background-color: var(--bg-secondary);
+  border-radius: 6px;
+  border-left: 3px solid var(--accent-color);
 }
 
 /* Responsive Design */
@@ -347,13 +422,13 @@
   }
   
   .entry-item {
-    grid-template-columns: 1fr;
     gap: 8px;
   }
   
-  .entry-status,
-  .entry-vibe {
-    justify-self: start;
+  .entry-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
   }
 }
 

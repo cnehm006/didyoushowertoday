@@ -6,6 +6,7 @@ import {
   onAuthStateChange,
   getCurrentUser,
   addShowerEntry,
+  deleteShowerEntry as deleteShowerEntryFromDB,
   unlockAchievement,
   updateUserData,
   User,
@@ -24,6 +25,7 @@ interface UserContextType {
   signup: (email: string, username: string, password: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
   updateShowerData: (entry: ShowerEntry) => void;
+  deleteShowerEntry: (entryId: string) => Promise<void>;
   unlockAchievement: (achievementId: string) => Promise<void>;
   updatePreferences: (preferences: Partial<UserPreferences>) => void;
   deleteUserAccount: (userId: string) => Promise<void>;
@@ -120,12 +122,19 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!user) return;
     
     try {
-      await addShowerEntry(user.id, entry);
+      // Ensure the entry has required fields
+      const entryWithDefaults = {
+        ...entry,
+        id: entry.id || `${entry.date}-${Date.now()}`,
+        timestamp: entry.timestamp || new Date().toISOString()
+      };
+      
+      await addShowerEntry(user.id, entryWithDefaults);
       
       // Update local state
       const updatedUser = {
         ...user,
-        showerData: [...user.showerData, entry]
+        showerData: [...user.showerData, entryWithDefaults]
       };
       setUser(updatedUser);
       
@@ -135,6 +144,28 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }, 1000);
     } catch (error) {
       console.error('Error updating shower data:', error);
+    }
+  };
+
+  const deleteShowerEntry = async (entryId: string) => {
+    if (!user) return;
+    
+    try {
+      await deleteShowerEntryFromDB(user.id, entryId);
+      
+      // Update local state
+      const updatedUser = {
+        ...user,
+        showerData: user.showerData.filter(entry => entry.id !== entryId)
+      };
+      setUser(updatedUser);
+      
+      // Check for new achievements after deleting shower data
+      setTimeout(() => {
+        checkAchievements();
+      }, 1000);
+    } catch (error) {
+      console.error('Error deleting shower entry:', error);
     }
   };
 
@@ -265,6 +296,7 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     signup,
     logout,
     updateShowerData,
+    deleteShowerEntry,
     unlockAchievement: unlockUserAchievement,
     updatePreferences,
     deleteUserAccount

@@ -163,7 +163,15 @@ const translations = {
     
     // Footer
     madeWithLove: "Made with love and shampoo",
-    madeWithLoveFr: "Fait avec amour et shampooing"
+    madeWithLoveFr: "Fait avec amour et shampooing",
+    
+    // Validation Errors
+    invalidEmail: "Please enter a valid email address",
+    weakPassword: "Password must be at least 6 characters long",
+    
+    // Delete functionality
+    deleteEntry: "Delete Entry",
+    confirmDeleteEntry: "Are you sure you want to delete this entry? This action cannot be undone."
   },
   fr: {
     title: "As-tu pris une douche aujourd'hui?",
@@ -316,7 +324,15 @@ const translations = {
     
     // Footer
     madeWithLove: "Fait avec amour et shampooing",
-    madeWithLoveFr: "Fait avec amour et shampooing"
+    madeWithLoveFr: "Fait avec amour et shampooing",
+    
+    // Validation Errors
+    invalidEmail: "Veuillez entrer une adresse email valide",
+    weakPassword: "Le mot de passe doit contenir au moins 6 caractères",
+    
+    // Delete functionality
+    deleteEntry: "Supprimer l'entrée",
+    confirmDeleteEntry: "Êtes-vous sûr de vouloir supprimer cette entrée ? Cette action ne peut pas être annulée."
   }
 };
 

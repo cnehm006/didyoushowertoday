@@ -17,6 +17,7 @@ const AuthPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [passwordError, setPasswordError] = useState('');
+  const [emailError, setEmailError] = useState('');
 
   // Redirect to dashboard if already authenticated
   useEffect(() => {
@@ -29,8 +30,11 @@ const AuthPage: React.FC = () => {
     e.preventDefault();
     setError('');
 
-    // Client-side validation for signup
-    if (!isLogin && !validatePassword(password)) {
+    // Client-side validation
+    const isEmailValid = validateEmail(email);
+    const isPasswordValid = !isLogin ? validatePassword(password) : true;
+
+    if (!isEmailValid || !isPasswordValid) {
       return;
     }
 
@@ -55,18 +59,39 @@ const AuthPage: React.FC = () => {
     setIsLogin(!isLogin);
     setError('');
     setPasswordError('');
+    setEmailError('');
     setEmail('');
     setUsername('');
     setPassword('');
   };
 
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!email) {
+      setEmailError('');
+      return true; // Allow empty for login
+    }
+    if (!emailRegex.test(email)) {
+      setEmailError(t('invalidEmail'));
+      return false;
+    }
+    setEmailError('');
+    return true;
+  };
+
   const validatePassword = (password: string) => {
     if (password.length < 6) {
-      setPasswordError('Password must be at least 6 characters long');
+      setPasswordError(t('weakPassword'));
       return false;
     }
     setPasswordError('');
     return true;
+  };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newEmail = e.target.value;
+    setEmail(newEmail);
+    validateEmail(newEmail);
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -189,11 +214,21 @@ const AuthPage: React.FC = () => {
                   type="email"
                   placeholder={t('email')}
                   value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={handleEmailChange}
                   required
-                  className="auth-input"
+                  className={`auth-input ${emailError ? 'error' : ''}`}
                 />
               </div>
+              {emailError && (
+                <motion.div
+                  className="email-error"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                >
+                  {emailError}
+                </motion.div>
+              )}
             </div>
 
             <div className="form-group">

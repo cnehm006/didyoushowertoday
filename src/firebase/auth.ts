@@ -37,7 +37,9 @@ export interface Achievement {
 }
 
 export interface ShowerEntry {
+  id: string;
   date: string;
+  timestamp?: string;
   showered: boolean;
   vibe: number;
   notes?: string;
@@ -181,6 +183,27 @@ export const addShowerEntry = async (userId: string, entry: ShowerEntry): Promis
     });
   } catch (error) {
     throw new Error('Failed to add shower entry');
+  }
+};
+
+// Delete shower entry
+export const deleteShowerEntry = async (userId: string, entryId: string): Promise<void> => {
+  try {
+    const userRef = doc(db, 'users', userId);
+    const userDoc = await getDoc(userRef);
+    
+    if (!userDoc.exists()) {
+      throw new Error('User not found');
+    }
+
+    const userData = userDoc.data() as User;
+    const updatedShowerData = userData.showerData.filter(entry => entry.id !== entryId);
+
+    await updateDoc(userRef, {
+      showerData: updatedShowerData
+    });
+  } catch (error) {
+    throw new Error('Failed to delete shower entry');
   }
 };
 

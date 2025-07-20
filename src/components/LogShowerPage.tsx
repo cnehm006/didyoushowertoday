@@ -2,20 +2,27 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useUser } from '../contexts/UserContext';
 import { useLanguage } from '../contexts/LanguageContext';
-import { Calendar, Smile, Frown, Meh, Plus, Save, CheckCircle } from 'lucide-react';
+import { Calendar, Smile, Frown, Meh, Plus, Save, CheckCircle, Trash2 } from 'lucide-react';
 import './LogShowerPage.css';
 import { AnimatePresence } from 'framer-motion';
 
 const LogShowerPage: React.FC = () => {
-  const { user, updateShowerData } = useUser();
+  const { user, updateShowerData, deleteShowerEntry } = useUser();
   const { t } = useLanguage();
-  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+  const [selectedDate, setSelectedDate] = useState(() => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  });
   const [showered, setShowered] = useState(false);
   const [vibe, setVibe] = useState(5);
   const [notes, setNotes] = useState('');
   const [products, setProducts] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [deletingEntryId, setDeletingEntryId] = useState<string | null>(null);
 
   if (!user) return null;
 
@@ -38,8 +45,11 @@ const LogShowerPage: React.FC = () => {
     setIsSubmitting(true);
 
     try {
+      const now = new Date();
       const entry = {
+        id: `${selectedDate}-${Date.now()}`,
         date: selectedDate,
+        timestamp: now.toISOString(),
         showered,
         vibe,
         notes: notes.trim() || undefined,
@@ -61,6 +71,19 @@ const LogShowerPage: React.FC = () => {
       console.error('Error logging shower:', error);
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleDeleteEntry = async (entryId: string) => {
+    if (window.confirm(t('confirmDeleteEntry'))) {
+      setDeletingEntryId(entryId);
+      try {
+        await deleteShowerEntry(entryId);
+      } catch (error) {
+        console.error('Error deleting entry:', error);
+      } finally {
+        setDeletingEntryId(null);
+      }
     }
   };
 
@@ -132,7 +155,13 @@ const LogShowerPage: React.FC = () => {
               type="date"
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
-              max={new Date().toISOString().split('T')[0]}
+              max={(() => {
+                const today = new Date();
+                const year = today.getFullYear();
+                const month = String(today.getMonth() + 1).padStart(2, '0');
+                const day = String(today.getDate()).padStart(2, '0');
+                return `${year}-${month}-${day}`;
+              })()}
               className="form-input"
             />
           </div>
@@ -211,7 +240,7 @@ const LogShowerPage: React.FC = () => {
           {/* Notes */}
           <div className="form-section">
             <label className="form-label">
-              📝 {t('notes')} ({t('optional')})
+              📝 {t('notes')}
             </label>
             <textarea
               value={notes}
@@ -257,23 +286,80 @@ const LogShowerPage: React.FC = () => {
           ) : (
             <div className="entries-list">
               {user.showerData
-                .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+                .sort((a, b) => {
+                  // Sort by date first, then by timestamp if available
+                  const dateComparison = new Date(b.date).getTime() - new Date(a.date).getTime();
+                  if (dateComparison !== 0) return dateComparison;
+                  
+                  // If same date, sort by timestamp (newest first)
+                  if (a.timestamp && b.timestamp) {
+                    return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+                  }
+                  
+                  // If one has timestamp and other doesn't, prioritize the one with timestamp
+                  if (a.timestamp && !b.timestamp) return -1;
+                  if (!a.timestamp && b.timestamp) return 1;
+                  
+                  return 0;
+                })
                 .slice(0, 5)
                 .map((entry, index) => (
                   <motion.div
-                    key={entry.date}
+                    key={entry.id || `${entry.date}-${index}`}
                     className="entry-item"
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.3, delay: index * 0.1 }}
                   >
-                    <div className="entry-date">{new Date(entry.date).toLocaleDateString()}</div>
+                    <div className="entry-header">
+                      <div className="entry-date">{(() => {
+                        const [year, month, day] = entry.date.split('-');
+                        return new Date(parseInt(year), parseInt(month) - 1, parseInt(day)).toLocaleDateString();
+                      })()}</div>
+                      {entry.timestamp ? (
+                        <div className="entry-time">
+                          {new Date(entry.timestamp).toLocaleTimeString([], { 
+                            hour: '2-digit', 
+                            minute: '2-digit',
+                            second: '2-digit'
+                          })}
+                        </div>
+                      ) : (
+                        <div className="entry-time">No time recorded</div>
+                      )}
+                      <motion.button
+                        className="delete-entry-btn"
+                        onClick={() => handleDeleteEntry(entry.id)}
+                        disabled={deletingEntryId === entry.id}
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        title={t('deleteEntry')}
+                      >
+                        {deletingEntryId === entry.id ? (
+                          <div className="loading-spinner small" />
+                        ) : (
+                          <Trash2 size={16} />
+                        )}
+                      </motion.button>
+                    </div>
                     <div className="entry-status">
                       {entry.showered ? '🚿' : '❌'} {entry.showered ? t('showered') : t('noShower')}
                     </div>
                     <div className="entry-vibe">
                       {getVibeIcon(entry.vibe)} {entry.vibe}/10
                     </div>
+                    {entry.products && entry.products.length > 0 && (
+                      <div className="entry-products">
+                        <span className="products-label">🧴 {t('productsUsed')}:</span>
+                        <span className="products-list">
+                          {entry.products.map((product, idx) => (
+                            <span key={idx} className="product-tag">
+                              {t(product)}
+                            </span>
+                          )).join(', ')}
+                        </span>
+                      </div>
+                    )}
                     {entry.notes && (
                       <div className="entry-notes">"{entry.notes}"</div>
                     )}
