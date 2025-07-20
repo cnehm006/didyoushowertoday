@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/didyoushowertoday/static/css/main.df49b802.css",
+    "main.js": "/didyoushowertoday/static/js/main.778ded87.js",
+    "static/js/453.a1532330.chunk.js": "/didyoushowertoday/static/js/453.a1532330.chunk.js",
+    "index.html": "/didyoushowertoday/index.html",
+    "main.df49b802.css.map": "/didyoushowertoday/static/css/main.df49b802.css.map",
+    "main.778ded87.js.map": "/didyoushowertoday/static/js/main.778ded87.js.map",
+    "453.a1532330.chunk.js.map": "/didyoushowertoday/static/js/453.a1532330.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.df49b802.css",
+    "static/js/main.778ded87.js"
+  ]
+}
