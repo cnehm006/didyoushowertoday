@@ -16,7 +16,7 @@ const LogShowerPage: React.FC = () => {
     const day = String(today.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
   });
-  const [showered, setShowered] = useState(false);
+  const [showered, setShowered] = useState(true);
   const [vibe, setVibe] = useState(5);
   const [notes, setNotes] = useState('');
   const [products, setProducts] = useState<string[]>([]);
@@ -166,32 +166,7 @@ const LogShowerPage: React.FC = () => {
             />
           </div>
 
-          {/* Shower Toggle */}
-          <div className="form-section">
-            <label className="form-label">
-              🚿 {t('didYouShower')}
-            </label>
-            <div className="toggle-container">
-              <motion.button
-                type="button"
-                className={`toggle-btn ${showered ? 'active' : ''}`}
-                onClick={() => setShowered(true)}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                {t('yes')}
-              </motion.button>
-              <motion.button
-                type="button"
-                className={`toggle-btn ${!showered ? 'active' : ''}`}
-                onClick={() => setShowered(false)}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                {t('no')}
-              </motion.button>
-            </div>
-          </div>
+
 
           {/* Vibe Level */}
           <div className="form-section">
@@ -343,7 +318,7 @@ const LogShowerPage: React.FC = () => {
                       </motion.button>
                     </div>
                     <div className="entry-status">
-                      {entry.showered ? '🚿' : '❌'} {entry.showered ? t('showered') : t('noShower')}
+                      🚿 {t('showered')}
                     </div>
                     <div className="entry-vibe">
                       {getVibeIcon(entry.vibe)} {entry.vibe}/10
@@ -354,9 +329,9 @@ const LogShowerPage: React.FC = () => {
                         <span className="products-list">
                           {entry.products.map((product, idx) => (
                             <span key={idx} className="product-tag">
-                              {t(product)}
+                              {typeof product === 'string' ? t(product) : product}
                             </span>
-                          )).join(', ')}
+                          ))}
                         </span>
                       </div>
                     )}
