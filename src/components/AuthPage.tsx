@@ -16,6 +16,7 @@ const AuthPage: React.FC = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
 
   // Redirect to dashboard if already authenticated
   useEffect(() => {
@@ -28,17 +29,22 @@ const AuthPage: React.FC = () => {
     e.preventDefault();
     setError('');
 
+    // Client-side validation for signup
+    if (!isLogin && !validatePassword(password)) {
+      return;
+    }
+
     try {
-      let success = false;
+      let result;
       
       if (isLogin) {
-        success = await login(email, password);
+        result = await login(email, password);
       } else {
-        success = await signup(email, username, password);
+        result = await signup(email, username, password);
       }
 
-      if (!success) {
-        setError(isLogin ? 'Invalid email or password' : 'Signup failed. Please try again.');
+      if (!result.success) {
+        setError(result.error || 'An error occurred');
       }
     } catch (err: any) {
       setError(err.message || 'An error occurred');
@@ -48,9 +54,27 @@ const AuthPage: React.FC = () => {
   const toggleMode = () => {
     setIsLogin(!isLogin);
     setError('');
+    setPasswordError('');
     setEmail('');
     setUsername('');
     setPassword('');
+  };
+
+  const validatePassword = (password: string) => {
+    if (password.length < 6) {
+      setPasswordError('Password must be at least 6 characters long');
+      return false;
+    }
+    setPasswordError('');
+    return true;
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newPassword = e.target.value;
+    setPassword(newPassword);
+    if (!isLogin) {
+      validatePassword(newPassword);
+    }
   };
 
   return (
@@ -179,11 +203,21 @@ const AuthPage: React.FC = () => {
                   type="password"
                   placeholder={t('password')}
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
+                  onChange={handlePasswordChange}
                   required
-                  className="auth-input"
+                  className={`auth-input ${passwordError ? 'error' : ''}`}
                 />
               </div>
+              {passwordError && (
+                <motion.div
+                  className="password-error"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                >
+                  {passwordError}
+                </motion.div>
+              )}
             </div>
 
             {error && (
