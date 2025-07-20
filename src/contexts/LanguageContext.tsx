@@ -159,7 +159,11 @@ const translations = {
     "6pm": "6:00 PM",
     "7pm": "7:00 PM",
     "8pm": "8:00 PM",
-    "9pm": "9:00 PM"
+    "9pm": "9:00 PM",
+    
+    // Footer
+    madeWithLove: "Made with love and shampoo",
+    madeWithLoveFr: "Fait avec amour et shampooing"
   },
   fr: {
     title: "As-tu pris une douche aujourd'hui?",
@@ -308,7 +312,11 @@ const translations = {
     "6pm": "18h00",
     "7pm": "19h00",
     "8pm": "20h00",
-    "9pm": "21h00"
+    "9pm": "21h00",
+    
+    // Footer
+    madeWithLove: "Fait avec amour et shampooing",
+    madeWithLoveFr: "Fait avec amour et shampooing"
   }
 };
 

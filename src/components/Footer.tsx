@@ -1,9 +1,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Heart, Droplets } from 'lucide-react';
+import { useLanguage } from '../contexts/LanguageContext';
 import './Footer.css';
 
 const Footer: React.FC = () => {
+  const { t } = useLanguage();
+  
   return (
     <motion.footer 
       className="footer"
@@ -13,7 +16,7 @@ const Footer: React.FC = () => {
     >
       <div className="footer-content">
         <div className="footer-text">
-          Made with 
+          {t('madeWithLove')}
           <motion.span 
             className="heart-icon"
             animate={{ scale: [1, 1.2, 1] }}
@@ -21,7 +24,6 @@ const Footer: React.FC = () => {
           >
             <Heart size={16} />
           </motion.span>
-          and 
           <motion.span 
             className="shampoo-icon"
             animate={{ rotate: [0, 5, -5, 0] }}
@@ -29,7 +31,6 @@ const Footer: React.FC = () => {
           >
             <Droplets size={16} />
           </motion.span>
-          shampoo
         </div>
       </div>
     </motion.footer>

@@ -104,7 +104,9 @@ const AuthPage: React.FC = () => {
         </motion.div>
       </div>
 
-      <div className="auth-container">
+      <div className="auth-layout">
+        {/* Left Side - Auth Form */}
+        <div className="auth-container">
         <motion.div
           className="auth-card glass"
           initial={{ opacity: 0, y: 50 }}
@@ -237,6 +239,38 @@ const AuthPage: React.FC = () => {
               <span>{t('mentalWellness')}</span>
             </div>
           </div>
+        </motion.div>
+      </div>
+
+        {/* Right Side - Big Title */}
+        <motion.div 
+          className="auth-title-section"
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+        >
+          <motion.div
+            className="title-icon"
+            animate={{ 
+              rotate: [0, 360],
+              scale: [1, 1.1, 1]
+            }}
+            transition={{ 
+              duration: 4,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          >
+            🚿
+          </motion.div>
+          <motion.h1 
+            className="big-title"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+          >
+            {t('title')}
+          </motion.h1>
         </motion.div>
       </div>
 
