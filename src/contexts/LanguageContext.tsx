@@ -102,7 +102,64 @@ const translations = {
     haveAccount: "Already have an account?",
     unlockAchievements: "Unlock Achievements",
     trackProgress: "Track Progress",
-    mentalWellness: "Mental Wellness"
+    mentalWellness: "Mental Wellness",
+    
+    // Log Shower
+    logShower: "Log Shower",
+    logShowerDescription: "Track your daily showers and mood to see patterns and earn achievements!",
+    date: "Date",
+    didYouShower: "Did you shower today?",
+    yes: "Yes",
+    no: "No",
+    howAreYouFeeling: "How are you feeling?",
+    productsUsed: "Products used",
+    notes: "Notes",
+    optional: "optional",
+    notesPlaceholder: "How was your shower? Any thoughts?",
+    logEntry: "Log Entry",
+    showerLoggedSuccessfully: "Shower logged successfully!",
+    recentEntries: "Recent Entries",
+    noEntriesYet: "No entries yet",
+    startLoggingToSeeHistory: "Start logging to see your history here",
+    showered: "Showered",
+    noShower: "No shower",
+    
+    // Vibe levels
+    vibeAmazing: "Amazing!",
+    vibeGood: "Good",
+    vibeOkay: "Okay",
+    vibeBad: "Bad",
+    vibeTerrible: "Terrible",
+    
+    // Products
+    conditioner: "Conditioner",
+    faceWash: "Face Wash",
+    
+    // Settings
+    emailReminders: "Email Reminders",
+    emailRemindersDesc: "Receive daily email reminders to log your shower and track your mood",
+    reminderTime: "Reminder Time",
+    exportData: "Export Data",
+    exportDataDesc: "Download all your shower data and achievements as a JSON file",
+    download: "Download",
+    deleteAccount: "Delete Account",
+    deleteAccountDesc: "Permanently delete your account and all associated data. This action cannot be undone.",
+    delete: "Delete",
+    deleteAccountConfirm: "Delete Account?",
+    deleteAccountWarning: "This will permanently delete your account and all your shower data. This action cannot be undone.",
+    cancel: "Cancel",
+    
+    // Time options
+    "7am": "7:00 AM",
+    "8am": "8:00 AM",
+    "9am": "9:00 AM",
+    "10am": "10:00 AM",
+    "11am": "11:00 AM",
+    "12pm": "12:00 PM",
+    "6pm": "6:00 PM",
+    "7pm": "7:00 PM",
+    "8pm": "8:00 PM",
+    "9pm": "9:00 PM"
   },
   fr: {
     title: "As-tu pris une douche aujourd'hui?",
@@ -194,7 +251,64 @@ const translations = {
     haveAccount: "Vous avez déjà un compte ?",
     unlockAchievements: "Débloquer des réalisations",
     trackProgress: "Suivre les progrès",
-    mentalWellness: "Bien-être mental"
+    mentalWellness: "Bien-être mental",
+    
+    // Log Shower
+    logShower: "Enregistrer une douche",
+    logShowerDescription: "Suivez vos douches quotidiennes et votre humeur pour voir les tendances et gagner des réalisations !",
+    date: "Date",
+    didYouShower: "Avez-vous pris une douche aujourd'hui ?",
+    yes: "Oui",
+    no: "Non",
+    howAreYouFeeling: "Comment vous sentez-vous ?",
+    productsUsed: "Produits utilisés",
+    notes: "Notes",
+    optional: "optionnel",
+    notesPlaceholder: "Comment était votre douche ? Des réflexions ?",
+    logEntry: "Enregistrer l'entrée",
+    showerLoggedSuccessfully: "Douche enregistrée avec succès !",
+    recentEntries: "Entrées récentes",
+    noEntriesYet: "Aucune entrée pour le moment",
+    startLoggingToSeeHistory: "Commencez à enregistrer pour voir votre historique ici",
+    showered: "Douche prise",
+    noShower: "Pas de douche",
+    
+    // Vibe levels
+    vibeAmazing: "Incroyable !",
+    vibeGood: "Bien",
+    vibeOkay: "Correct",
+    vibeBad: "Mauvais",
+    vibeTerrible: "Terrible",
+    
+    // Products
+    conditioner: "Après-shampooing",
+    faceWash: "Nettoyant visage",
+    
+    // Settings
+    emailReminders: "Rappels par email",
+    emailRemindersDesc: "Recevez des rappels quotidiens par email pour enregistrer votre douche et suivre votre humeur",
+    reminderTime: "Heure du rappel",
+    exportData: "Exporter les données",
+    exportDataDesc: "Téléchargez toutes vos données de douche et réalisations sous forme de fichier JSON",
+    download: "Télécharger",
+    deleteAccount: "Supprimer le compte",
+    deleteAccountDesc: "Supprimez définitivement votre compte et toutes les données associées. Cette action ne peut pas être annulée.",
+    delete: "Supprimer",
+    deleteAccountConfirm: "Supprimer le compte ?",
+    deleteAccountWarning: "Cela supprimera définitivement votre compte et toutes vos données de douche. Cette action ne peut pas être annulée.",
+    cancel: "Annuler",
+    
+    // Time options
+    "7am": "7h00",
+    "8am": "8h00",
+    "9am": "9h00",
+    "10am": "10h00",
+    "11am": "11h00",
+    "12pm": "12h00",
+    "6pm": "18h00",
+    "7pm": "19h00",
+    "8pm": "20h00",
+    "9pm": "21h00"
   }
 };
 

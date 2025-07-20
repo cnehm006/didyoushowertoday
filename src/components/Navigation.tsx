@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Sun, Moon, Languages, Droplets, LogIn } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
@@ -19,6 +19,7 @@ const Navigation: React.FC<NavigationProps> = ({ showNavLinks = true }) => {
 
   const currentPage = location.pathname === '/dashboard' ? 'dashboard' : 
                      location.pathname === '/profile' ? 'profile' : 
+                     location.pathname === '/log-shower' ? 'logShower' : 
                      location.pathname === '/about' ? 'about' : '';
 
   const handleLogout = async () => {
@@ -59,7 +60,16 @@ const Navigation: React.FC<NavigationProps> = ({ showNavLinks = true }) => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  📊 {t('dashboard')}
+                  {t('dashboard')}
+                </motion.button>
+              </Link>
+              <Link to="/log-shower">
+                <motion.button
+                  className={`nav-btn ${currentPage === 'logShower' ? 'active' : ''}`}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {t('logShower')}
                 </motion.button>
               </Link>
               <Link to="/about">
@@ -68,7 +78,7 @@ const Navigation: React.FC<NavigationProps> = ({ showNavLinks = true }) => {
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
-                  ℹ️ {t('about')}
+                  {t('about')}
                 </motion.button>
               </Link>
             </div>

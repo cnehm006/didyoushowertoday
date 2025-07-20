@@ -5,6 +5,7 @@ import { showerData, productUsageData } from '../data/showerData';
 import LineChart from './charts/LineChart';
 import BarChart from './charts/BarChart';
 import PieChart from './charts/PieChart';
+import Footer from './Footer';
 
 import './Dashboard.css';
 
@@ -211,6 +212,7 @@ const Dashboard: React.FC = () => {
       </div>
     </section>
 
+    <Footer />
   </motion.main>
   );
 };

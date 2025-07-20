@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useUser } from '../contexts/UserContext';
 import { useLanguage } from '../contexts/LanguageContext';
 import { LogIn, UserPlus, Mail, Lock, User, Loader } from 'lucide-react';
+import Footer from './Footer';
 import './AuthPage.css';
 
 const AuthPage: React.FC = () => {
@@ -238,6 +239,8 @@ const AuthPage: React.FC = () => {
           </div>
         </motion.div>
       </div>
+
+      <Footer />
     </div>
   );
 };

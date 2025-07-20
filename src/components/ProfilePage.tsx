@@ -2,14 +2,16 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useUser } from '../contexts/UserContext';
 import { useLanguage } from '../contexts/LanguageContext';
-import { User, Settings, Trophy, Calendar, Target, LogOut, Edit3 } from 'lucide-react';
+import { User, Settings, Trophy, Calendar, Target, LogOut } from 'lucide-react';
+import Footer from './Footer';
 import './ProfilePage.css';
 import { AnimatePresence } from 'framer-motion';
 
 const ProfilePage: React.FC = () => {
-  const { user, logout } = useUser();
+  const { user, logout, updatePreferences, deleteUserAccount } = useUser();
   const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<'profile' | 'achievements' | 'settings'>('profile');
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   if (!user) return null;
 
@@ -18,6 +20,41 @@ const ProfilePage: React.FC = () => {
   const averageVibe = user.showerData.length > 0 
     ? (user.showerData.reduce((sum, entry) => sum + entry.vibe, 0) / user.showerData.length).toFixed(1)
     : '0.0';
+
+  const exportUserData = () => {
+    const data = {
+      user: {
+        username: user.username,
+        email: user.email,
+        joinDate: user.joinDate,
+        achievements: user.achievements,
+        preferences: user.preferences
+      },
+      showerData: user.showerData,
+      exportDate: new Date().toISOString()
+    };
+
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `shower-data-${user.username}-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleDeleteAccount = async () => {
+    try {
+      // Delete user data from Firestore
+      await deleteUserAccount(user.id);
+      // Logout and redirect
+      await logout();
+    } catch (error) {
+      console.error('Error deleting account:', error);
+    }
+  };
 
   const tabs = [
     { id: 'profile', label: t('profile'), icon: User },
@@ -43,13 +80,6 @@ const ProfilePage: React.FC = () => {
                 <User size={32} />
               )}
             </div>
-            <motion.button
-              className="edit-avatar-btn"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-            >
-              <Edit3 size={16} />
-            </motion.button>
           </div>
           
           <div className="profile-info">
@@ -183,6 +213,8 @@ const ProfilePage: React.FC = () => {
                 </motion.div>
               )}
 
+
+
               {activeTab === 'achievements' && (
                 <motion.div
                   key="achievements"
@@ -225,31 +257,77 @@ const ProfilePage: React.FC = () => {
                   transition={{ duration: 0.3 }}
                   className="settings-tab"
                 >
-                  <h2>Settings</h2>
-                  <div className="settings-section">
-                    <h3>Preferences</h3>
+                  <h2>{t('settings')}</h2>
+                  <div className="settings-content">
+                    {/* Email Reminders */}
                     <div className="setting-item">
-                      <label>Theme</label>
-                      <select value={user.preferences.theme}>
-                        <option value="light">Light</option>
-                        <option value="dark">Dark</option>
-                      </select>
+                      <div className="setting-header">
+                        <label className="setting-label">
+                          <input
+                            type="checkbox"
+                            checked={user.preferences?.notifications || false}
+                            onChange={(e) => updatePreferences({ notifications: e.target.checked })}
+                            className="setting-checkbox"
+                          />
+                          <span className="setting-text">{t('emailReminders')}</span>
+                        </label>
+                      </div>
+                      <p className="setting-description">{t('emailRemindersDesc')}</p>
                     </div>
+
+                    {/* Reminder Time */}
+                    {user.preferences?.notifications && (
+                      <div className="setting-item">
+                        <label className="setting-label">{t('reminderTime')}</label>
+                        <select
+                          value={user.preferences?.reminderTime || '09:00'}
+                          onChange={(e) => updatePreferences({ reminderTime: e.target.value })}
+                          className="setting-select"
+                        >
+                          <option value="07:00">{t('7am')}</option>
+                          <option value="08:00">{t('8am')}</option>
+                          <option value="09:00">{t('9am')}</option>
+                          <option value="10:00">{t('10am')}</option>
+                          <option value="11:00">{t('11am')}</option>
+                          <option value="12:00">{t('12pm')}</option>
+                          <option value="18:00">{t('6pm')}</option>
+                          <option value="19:00">{t('7pm')}</option>
+                          <option value="20:00">{t('8pm')}</option>
+                          <option value="21:00">{t('9pm')}</option>
+                        </select>
+                      </div>
+                    )}
+
+                    {/* Data Export */}
                     <div className="setting-item">
-                      <label>Language</label>
-                      <select value={user.preferences.language}>
-                        <option value="en">English</option>
-                        <option value="fr">Français</option>
-                      </select>
+                      <div className="setting-header">
+                        <label className="setting-label">{t('exportData')}</label>
+                        <motion.button
+                          className="setting-btn secondary"
+                          onClick={exportUserData}
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          {t('download')}
+                        </motion.button>
+                      </div>
+                      <p className="setting-description">{t('exportDataDesc')}</p>
                     </div>
-                    <div className="setting-item">
-                      <label>
-                        <input 
-                          type="checkbox" 
-                          checked={user.preferences.notifications}
-                        />
-                        Enable Notifications
-                      </label>
+
+                    {/* Delete Account */}
+                    <div className="setting-item danger-zone">
+                      <div className="setting-header">
+                        <label className="setting-label danger">{t('deleteAccount')}</label>
+                        <motion.button
+                          className="setting-btn danger"
+                          onClick={() => setShowDeleteConfirm(true)}
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          {t('delete')}
+                        </motion.button>
+                      </div>
+                      <p className="setting-description">{t('deleteAccountDesc')}</p>
                     </div>
                   </div>
                 </motion.div>
@@ -258,6 +336,50 @@ const ProfilePage: React.FC = () => {
           </div>
         </motion.div>
       </div>
+
+      {/* Delete Account Confirmation Modal */}
+      <AnimatePresence>
+        {showDeleteConfirm && (
+          <motion.div
+            className="modal-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setShowDeleteConfirm(false)}
+          >
+            <motion.div
+              className="modal-content glass"
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h3>{t('deleteAccountConfirm')}</h3>
+              <p>{t('deleteAccountWarning')}</p>
+              <div className="modal-actions">
+                <motion.button
+                  className="modal-btn cancel"
+                  onClick={() => setShowDeleteConfirm(false)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {t('cancel')}
+                </motion.button>
+                <motion.button
+                  className="modal-btn danger"
+                  onClick={handleDeleteAccount}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {t('deleteAccount')}
+                </motion.button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <Footer />
     </div>
   );
 };

@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useUser } from '../contexts/UserContext';
 import { Droplets, BarChart3, Award, Users, Zap, Heart } from 'lucide-react';
+import Footer from './Footer';
 import './AboutPage.css';
 
 const AboutPage: React.FC = () => {
@@ -244,6 +245,8 @@ const AboutPage: React.FC = () => {
           💧
         </motion.div>
       </div>
+
+      <Footer />
     </motion.div>
   );
 };

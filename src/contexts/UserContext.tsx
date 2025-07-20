@@ -13,6 +13,8 @@ import {
   ShowerEntry,
   UserPreferences
 } from '../firebase/auth';
+import { doc, deleteDoc } from 'firebase/firestore';
+import { db } from '../firebase/config';
 
 interface UserContextType {
   user: User | null;
@@ -24,6 +26,7 @@ interface UserContextType {
   updateShowerData: (entry: ShowerEntry) => void;
   unlockAchievement: (achievementId: string) => Promise<void>;
   updatePreferences: (preferences: Partial<UserPreferences>) => void;
+  deleteUserAccount: (userId: string) => Promise<void>;
 }
 
 const UserContext = createContext<UserContextType | undefined>(undefined);
@@ -99,6 +102,11 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
         showerData: [...user.showerData, entry]
       };
       setUser(updatedUser);
+      
+      // Check for new achievements after adding shower data
+      setTimeout(() => {
+        checkAchievements();
+      }, 1000);
     } catch (error) {
       console.error('Error updating shower data:', error);
     }
@@ -129,6 +137,41 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  // Check and unlock achievements based on shower data
+  const checkAchievements = () => {
+    if (!user || user.showerData.length === 0) return;
+
+    const showeredEntries = user.showerData.filter(entry => entry.showered);
+    const highVibeEntries = user.showerData.filter(entry => entry.vibe >= 8);
+    
+    // Check for shower streak (7 consecutive days)
+    let currentStreak = 0;
+    let maxStreak = 0;
+    const sortedEntries = [...user.showerData].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    
+    for (const entry of sortedEntries) {
+      if (entry.showered) {
+        currentStreak++;
+        maxStreak = Math.max(maxStreak, currentStreak);
+      } else {
+        currentStreak = 0;
+      }
+    }
+
+    // Unlock achievements based on criteria
+    if (maxStreak >= 7 && !user.achievements.find(a => a.id === 'shower_streak_7')) {
+      unlockUserAchievement('shower_streak_7');
+    }
+    
+    if (highVibeEntries.length >= 3 && !user.achievements.find(a => a.id === 'high_vibe_master')) {
+      unlockUserAchievement('high_vibe_master');
+    }
+    
+    if (showeredEntries.length >= 7 && !user.achievements.find(a => a.id === 'consistency_king')) {
+      unlockUserAchievement('consistency_king');
+    }
+  };
+
   const updatePreferences = async (preferences: Partial<UserPreferences>) => {
     if (!user) return;
     
@@ -143,6 +186,17 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setUser(updatedUser);
     } catch (error) {
       console.error('Error updating preferences:', error);
+    }
+  };
+
+  const deleteUserAccount = async (userId: string) => {
+    try {
+      // Delete user document from Firestore
+      await deleteDoc(doc(db, 'users', userId));
+      // Note: Firebase Auth user deletion would require additional setup
+      // For now, we just delete the Firestore data
+    } catch (error) {
+      throw new Error('Failed to delete user account');
     }
   };
 
@@ -186,7 +240,8 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
     logout,
     updateShowerData,
     unlockAchievement: unlockUserAchievement,
-    updatePreferences
+    updatePreferences,
+    deleteUserAccount
   };
 
   return (
