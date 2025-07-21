@@ -20,6 +20,7 @@ const Navigation: React.FC<NavigationProps> = ({ showNavLinks = true }) => {
   const currentPage = location.pathname === '/dashboard' ? 'dashboard' : 
                      location.pathname === '/profile' ? 'profile' : 
                      location.pathname === '/log-shower' ? 'logShower' : 
+                     location.pathname === '/leaderboards' ? 'leaderboards' : 
                      location.pathname === '/about' ? 'about' : '';
 
   const handleLogout = async () => {
@@ -70,6 +71,15 @@ const Navigation: React.FC<NavigationProps> = ({ showNavLinks = true }) => {
                   whileTap={{ scale: 0.95 }}
                 >
                   {t('logShower')}
+                </motion.button>
+              </Link>
+              <Link to="/leaderboards">
+                <motion.button
+                  className={`nav-btn ${currentPage === 'leaderboards' ? 'active' : ''}`}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Leaderboards
                 </motion.button>
               </Link>
               <Link to="/about">

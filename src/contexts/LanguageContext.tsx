@@ -171,7 +171,24 @@ const translations = {
     
     // Delete functionality
     deleteEntry: "Delete Entry",
-    confirmDeleteEntry: "Are you sure you want to delete this entry? This action cannot be undone."
+    confirmDeleteEntry: "Are you sure you want to delete this entry? This action cannot be undone.",
+    
+    // Leaderboards
+    showerLeaderboards: "Shower Leaderboards",
+    leaderboardsDescription: "See who's the cleanest and most consistent shower enthusiast!",
+    activeUsers: "Active Users",
+    overall: "Overall",
+    vibeScore: "Vibe Score",
+    rank: "Rank",
+    user: "User",
+    stats: "Stats",
+    score: "Score",
+    lastShower: "Last Shower",
+    you: "You",
+    showers: "Showers",
+    days: "days",
+    keepShoweringMessage: "Keep showering to climb the ranks!",
+    leaderboardsUpdateNote: "Leaderboards update in real-time"
   },
   fr: {
     title: "As-tu pris une douche aujourd'hui?",
@@ -332,7 +349,24 @@ const translations = {
     
     // Delete functionality
     deleteEntry: "Supprimer l'entrée",
-    confirmDeleteEntry: "Êtes-vous sûr de vouloir supprimer cette entrée ? Cette action ne peut pas être annulée."
+    confirmDeleteEntry: "Êtes-vous sûr de vouloir supprimer cette entrée ? Cette action ne peut pas être annulée.",
+    
+    // Leaderboards
+    showerLeaderboards: "Classements de Douches",
+    leaderboardsDescription: "Découvrez qui est le plus propre et le plus constant dans ses douches !",
+    activeUsers: "Utilisateurs Actifs",
+    overall: "Global",
+    vibeScore: "Score de Vibe",
+    rank: "Rang",
+    user: "Utilisateur",
+    stats: "Statistiques",
+    score: "Score",
+    lastShower: "Dernière Douche",
+    you: "Vous",
+    showers: "Douches",
+    days: "jours",
+    keepShoweringMessage: "Continuez à prendre des douches pour grimper dans le classement !",
+    leaderboardsUpdateNote: "Les classements se mettent à jour en temps réel"
   }
 };
 

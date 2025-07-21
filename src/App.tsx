@@ -7,6 +7,7 @@ import AuthPage from './components/AuthPage';
 import ProfilePage from './components/ProfilePage';
 import AboutPage from './components/AboutPage';
 import LogShowerPage from './pages/LogShowerPage';
+import LeaderboardsPage from './components/LeaderboardsPage';
 import ThemeTransition from './components/ThemeTransition';
 import FloatingParticles from './components/FloatingParticles';
 import { ThemeProvider } from './contexts/ThemeContext';
@@ -78,6 +79,17 @@ const AppContent: React.FC = () => {
           <Route path="/log-shower" element={
             isAuthenticated ? (
               <LogShowerPage />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          } />
+          
+          <Route path="/leaderboards" element={
+            isAuthenticated ? (
+              <>
+                <Navigation />
+                <LeaderboardsPage />
+              </>
             ) : (
               <Navigate to="/login" replace />
             )
