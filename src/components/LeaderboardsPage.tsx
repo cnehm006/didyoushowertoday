@@ -315,10 +315,6 @@ const LeaderboardsPage: React.FC = () => {
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              whileHover={{ 
-                scale: 1.02,
-                boxShadow: "0 8px 25px rgba(0, 0, 0, 0.15)"
-              }}
               className={`leaderboard-entry ${getRankColor(entry.rank)} ${entry.username === user?.username ? 'current-user' : ''}`}
             >
               <div className="rank-section">
@@ -332,7 +328,6 @@ const LeaderboardsPage: React.FC = () => {
 
               <div className="stats-section">
                 <div className="stat-row">
-                  <span className="stat-label">{categoryLabels[selectedCategory]}:</span>
                   <span className="stat-value">
                     {selectedCategory === 'streak' && `${entry.currentStreak} ${t('days')}`}
                     {selectedCategory === 'achievements' && `${entry.totalAchievements}/14`}

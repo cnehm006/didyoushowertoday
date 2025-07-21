@@ -282,7 +282,6 @@
 
 /* Stats Section */
 .stats-section {
-  display: flex;
   align-items: center;
   justify-content: center;
   padding: 0;
