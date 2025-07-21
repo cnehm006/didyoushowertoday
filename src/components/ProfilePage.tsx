@@ -6,6 +6,7 @@ import { User, Settings, Trophy, Calendar, Target, LogOut } from 'lucide-react';
 import Footer from './Footer';
 import './ProfilePage.css';
 import { AnimatePresence } from 'framer-motion';
+import { calculateCurrentStreak } from '../utils/streakUtils';
 
 const ProfilePage: React.FC = () => {
   const { user, logout, updatePreferences, deleteUserAccount, getAllAchievements } = useUser();
@@ -403,32 +404,6 @@ const ProfilePage: React.FC = () => {
       <Footer />
     </div>
   );
-};
-
-// Helper function to calculate current streak
-const calculateCurrentStreak = (showerData: any[]) => {
-  if (showerData.length === 0) return 0;
-  
-  let streak = 0;
-  const today = new Date();
-  
-  for (let i = 0; i < 30; i++) {
-    const date = new Date(today);
-    date.setDate(date.getDate() - i);
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const dateStr = `${year}-${month}-${day}`;
-    
-    const entry = showerData.find(e => e.date === dateStr);
-    if (entry && entry.showered) {
-      streak++;
-    } else {
-      break;
-    }
-  }
-  
-  return streak;
 };
 
 export default ProfilePage; 

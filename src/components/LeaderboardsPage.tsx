@@ -7,6 +7,7 @@ import { useTheme } from '../contexts/ThemeContext';
 import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore';
 import { db } from '../firebase/config';
 import './LeaderboardsPage.css';
+import { calculateCurrentStreak } from '../utils/streakUtils';
 
 interface LeaderboardEntry {
   id: string;
@@ -127,30 +128,6 @@ const LeaderboardsPage: React.FC = () => {
   };
 
   // Helper functions for calculations
-  const calculateCurrentStreak = (showerData: any[]) => {
-    if (!showerData || showerData.length === 0) return 0;
-    
-    let streak = 0;
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    
-    for (let i = showerData.length - 1; i >= 0; i--) {
-      const showerDate = getDateFromShowerEntry(showerData[i]);
-      showerDate.setHours(0, 0, 0, 0);
-      
-      const diffTime = today.getTime() - showerDate.getTime();
-      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-      
-      if (diffDays === streak) {
-        streak++;
-      } else {
-        break;
-      }
-    }
-    
-    return streak;
-  };
-
   const calculateLongestStreak = (showerData: any[]) => {
     if (!showerData || showerData.length === 0) return 0;
     

@@ -129,7 +129,6 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const updateShowerData = async (entry: ShowerEntry) => {
     if (!user) return;
-    
     try {
       // Ensure the entry has required fields
       const entryWithDefaults = {
@@ -137,19 +136,15 @@ export const UserProvider: React.FC<{ children: React.ReactNode }> = ({ children
         id: entry.id || `${entry.date}-${Date.now()}`,
         timestamp: entry.timestamp || new Date().toISOString()
       };
-      
       await addShowerEntry(user.id, entryWithDefaults);
-      
-      // Update local state
-      const updatedUser = {
-        ...user,
-        showerData: [...user.showerData, entryWithDefaults]
-      };
-      setUser(updatedUser);
-      
+      // Re-fetch user data from Firebase to ensure consistency
+      const freshUser = await getCurrentUser();
+      if (freshUser) {
+        setUser(freshUser);
+      }
       // Check for new achievements after adding shower data with updated state
       setTimeout(() => {
-        checkAchievementsWithData([...user.showerData, entryWithDefaults]);
+        checkAchievementsWithData(freshUser ? freshUser.showerData : [...user.showerData, entryWithDefaults]);
       }, 1000);
     } catch (error) {
       console.error('Error updating shower data:', error);
