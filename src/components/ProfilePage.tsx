@@ -8,7 +8,7 @@ import './ProfilePage.css';
 import { AnimatePresence } from 'framer-motion';
 
 const ProfilePage: React.FC = () => {
-  const { user, logout, updatePreferences, deleteUserAccount } = useUser();
+  const { user, logout, updatePreferences, deleteUserAccount, getAllAchievements } = useUser();
   const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState<'profile' | 'achievements' | 'settings'>('profile');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
@@ -230,26 +230,42 @@ const ProfilePage: React.FC = () => {
                   className="achievements-tab"
                 >
                   <h2>{t('yourAchievements')}</h2>
-                  {user.achievements.length === 0 ? (
-                    <div className="empty-state">
-                      <Trophy size={48} />
-                      <p>{t('noAchievementsYet')}</p>
-                      <p>{t('startTrackingToUnlock')}</p>
-                    </div>
-                  ) : (
-                    <div className="achievements-grid">
-                      {user.achievements.map((achievement) => (
-                        <div key={achievement.id} className="achievement-item">
-                          <div className="achievement-icon">🏆</div>
+                  <div className="achievements-grid">
+                    {getAllAchievements().map((achievement) => (
+                      <div 
+                        key={achievement.id} 
+                        className={`achievement-item ${achievement.unlocked ? 'unlocked' : 'locked'}`}
+                        data-type={achievement.type}
+                      >
+                        <div className="achievement-header">
+                          <div className={`achievement-icon ${achievement.unlocked ? 'unlocked' : 'locked'}`}>
+                            {achievement.unlocked ? '🏆' : '🔒'}
+                          </div>
                           <div className="achievement-info">
-                            <h3>{achievement.title}</h3>
-                            <p>{achievement.description}</p>
-                            <small>Unlocked {new Date(achievement.unlockedAt).toLocaleDateString()}</small>
+                            <h3 className={achievement.unlocked ? 'unlocked' : 'locked'}>{achievement.title}</h3>
+                            <p className={achievement.unlocked ? 'unlocked' : 'locked'}>{achievement.description}</p>
+                            {achievement.unlocked && (
+                              <small className="unlock-date">
+                                Unlocked {user.achievements.find(a => a.id === achievement.id)?.unlockedAt && 
+                                  new Date(user.achievements.find(a => a.id === achievement.id)!.unlockedAt).toLocaleDateString()}
+                              </small>
+                            )}
                           </div>
                         </div>
-                      ))}
-                    </div>
-                  )}
+                        <div className="achievement-progress">
+                          <div className="progress-bar">
+                            <div 
+                              className={`progress-fill ${achievement.unlocked ? 'completed' : ''}`}
+                              style={{ width: `${(achievement.progress / achievement.maxProgress) * 100}%` }}
+                            />
+                          </div>
+                          <span className="progress-text">
+                            {achievement.progress}/{achievement.maxProgress}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </motion.div>
               )}
 

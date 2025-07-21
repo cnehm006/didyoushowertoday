@@ -28,7 +28,7 @@ export interface User {
 
 export interface Achievement {
   id: string;
-  type: 'streak' | 'vibe' | 'consistency' | 'goal';
+  type: 'streak' | 'vibe' | 'variety' | 'timing' | 'mastery' | 'extreme' | 'secret';
   title: string;
   description: string;
   unlockedAt: Date;
